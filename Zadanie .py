@@ -13,7 +13,7 @@ def start_timer():
 
 def stop_timer():
     time_lapse = time.time() - start_time
-    return time_lapse
+    return round(time_lapse, 4)
 
 
 try:
@@ -71,7 +71,9 @@ for row in cursor.execute('''SELECT trackName,
 most_popular_songs_search_time = stop_timer()
 
 print("\nCzas potrzebny do wyszukania najpopularniejszego artysty: "
-      + str(round(most_popular_artist_search_time, 4)) + " sekundy.")
+      + str(most_popular_artist_search_time) + " sekundy.")
+
 print("Czas potrzebny do wyszukania 5 najpopularniejszych piosenek: "
-      + str(round(most_popular_songs_search_time, 4)) + " sekundy.")
+      + str(most_popular_songs_search_time) + " sekundy.")
+
 conn.close()
