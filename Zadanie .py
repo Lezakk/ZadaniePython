@@ -1,5 +1,20 @@
 import sqlite3
 import csv
+import time
+
+
+start_time = time.time()
+
+
+def start_timer():
+    global start_time
+    start_time = time.time()
+
+
+def stop_timer():
+    time_lapse = time.time() - start_time
+    return time_lapse
+
 
 try:
     conn = sqlite3.connect('TracksDB.db')
@@ -32,7 +47,7 @@ for row in reader:
     conn.executemany('''INSERT INTO Triplets (userId, trackId, listeningDate)
                     VALUES (?, ?, ?)''', reader)
 
-
+start_timer()
 print("\nNajpopularniejszy artysta:")
 for row in cursor.execute('''SELECT artistName, COUNT(artistName)
         FROM Music
@@ -41,7 +56,9 @@ for row in cursor.execute('''SELECT artistName, COUNT(artistName)
         ORDER BY COUNT(artistName)
         DESC LIMIT 1'''):
     print(row)
+most_popular_artist_search_time = stop_timer()
 
+stop_timer()
 print("\nLista 5 najpopularniejszych piosenek:")
 for row in cursor.execute('''SELECT trackName,
         COUNT(Triplets.trackId)
@@ -51,6 +68,10 @@ for row in cursor.execute('''SELECT trackName,
         ORDER BY COUNT(Triplets.trackID)
         DESC LIMIT 5'''):
     print(row)
+most_popular_songs_search_time = stop_timer()
 
-
+print("\nCzas potrzebny do wyszukania najpopularniejszego artysty: "
+      + str(round(most_popular_artist_search_time, 4)) + " sekundy.")
+print("Czas potrzebny do wyszukania 5 najpopularniejszych piosenek: "
+      + str(round(most_popular_songs_search_time, 4)) + " sekundy.")
 conn.close()
